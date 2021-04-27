@@ -1,5 +1,4 @@
 import pandas as pd
-from icalendar import Calendar, Event
 
 # file variables
 dateFormatSource = '%d.%m.%Y'
@@ -8,13 +7,6 @@ year = '2021'
 file_export_name = 'prayer_time_'+year+'.csv'
 file_import_name = 'data.csv'
 file_import_sep = ' '
-
-#
-cal = Calendar()
-cal.add('prodid', 'apsmono')
-cal.add('version', '2.0')
-cal.add('CALSCALE', 'GREGORIAN')
-cal.add('X-WR-CALNAME', 'Jadwal Sholat Berlin 2021')
 
 
 #import data.csv
@@ -35,22 +27,16 @@ df = df.drop(df.loc[df['date'] == '29.02'+prefix].index)
 df['date'] = pd.to_datetime(df['date'], format=dateFormatSource)
 
 # constructing ical format
-# subject = []
-# date = []
-# time = []
+subject = []
+date = []
+time = []
 
 for day in df['date'].dt.strftime(dateFormatUS):
     prayers_time = df.loc[df['date'].dt.strftime(dateFormatUS) == day]
     for sholat in prayers_name:
-        event = event()
-        event.add('summary', sholat)
-        time = None
-        event.add('dtstart', time)
-        event.add('dtend', time)
-        event.add('location', 'Berlin')
-        # day
-        # prayers_time[sholat].values[0]
-        event['UID'] = ''
+        subject.append(sholat)
+        date.append(day)
+        time.append(prayers_time[sholat].values[0])
 
 # compound all collected data into a lsit
 data = {
